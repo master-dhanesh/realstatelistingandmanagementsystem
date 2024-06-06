@@ -6,8 +6,12 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 const dbconnect = require("./models/databseconnection");
+const UserSchema = require("./models/userSchema");
+const passport = require("passport");
+const session = require("express-session");
 
-var indexRouter = require("./routes/index");
+var userRouter = require("./routes/user");
+var propertyRouter = require("./routes/property");
 
 var app = express();
 
@@ -21,7 +25,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
+app.use(
+    session({
+        resave: false,
+        saveUninitialized: false,
+        secret: "j8rm",
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(UserSchema.serializeUser());
+passport.deserializeUser(UserSchema.deserializeUser());
+
+app.use("/user", userRouter);
+app.use("/property", propertyRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
