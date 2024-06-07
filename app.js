@@ -12,6 +12,7 @@ const session = require("express-session");
 
 var userRouter = require("./routes/user");
 var propertyRouter = require("./routes/property");
+var appointmentRouter = require("./routes/appointment");
 
 var app = express();
 
@@ -39,6 +40,7 @@ passport.deserializeUser(UserSchema.deserializeUser());
 
 app.use("/user", userRouter);
 app.use("/property", propertyRouter);
+app.use("/appointment", appointmentRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
