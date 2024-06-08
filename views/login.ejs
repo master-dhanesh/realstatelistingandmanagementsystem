@@ -1,0 +1,12 @@
+<%- include("partials/header")%>
+  <div class="mt-10 w-[80%] mx-auto p-10">
+    <h1 class="mb-5 text-3xl">This is Login</h1>
+    <form action="/user/login" method="post">
+      <input class="border" type="email" name="email">
+      <input class="border" type="password" name="password">
+      <button>Submit</button>
+    </form>
+    <a href="/user/register">Register User</a>
+
+  </div>
+  <%- include("partials/footer")%>

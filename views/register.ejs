@@ -1,0 +1,13 @@
+<%- include("partials/header")%>
+  <div class="mt-10 w-[80%] mx-auto p-10">
+    <h1 class="mb-5 text-3xl">This is Register</h1>
+    <form action="/user/register" method="post">
+      <input class="border" type="text" name="name" placeholder="Name">
+      <input class="border" type="email" name="email" placeholder="Email">
+      <input class="border" type="password" name="password" placeholder="Password">
+      <input class="border" type="text" name="role" placeholder="Role">
+      <button>Submit</button>
+    </form>
+
+  </div>
+  <%- include("partials/footer")%>

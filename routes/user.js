@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 
 const UserSchema = require("../models/userSchema");
+const PropertySchema = require("../models/propertySchema");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
@@ -9,8 +10,32 @@ const { isLoggedIn } = require("../utility/auth");
 
 passport.use(UserSchema.createStrategy());
 
-router.get("/", isLoggedIn, function (req, res, next) {
-    res.send("Homepage");
+router.get("/", async function (req, res, next) {
+    try {
+        const properties = await PropertySchema.find();
+        res.render("index", { properties: properties, user: req.user });
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+});
+
+router.get("/login", function (req, res, next) {
+    res.render("login", { user: req.user });
+});
+
+router.get("/register", function (req, res, next) {
+    res.render("register", { user: req.user });
+});
+
+router.get("/profile", isLoggedIn, async function (req, res, next) {
+    try {
+        const properties = await PropertySchema.find();
+        res.render("profile", { properties: properties, user: req.user });
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
 });
 
 router.post("/current", isLoggedIn, function (req, res, next) {
@@ -22,7 +47,7 @@ router.post("/register", async function (req, res, next) {
         const { name, email, password, role } = req.body;
         const newuser = new UserSchema({ name, email, role });
         await UserSchema.register(newuser, password);
-        res.send("User Registered!");
+        res.redirect("/login");
     } catch (error) {
         res.send(error.message);
     }
@@ -32,13 +57,13 @@ router.post(
     "/login",
     passport.authenticate("local"),
     function (req, res, next) {
-        res.send("user logged in");
+        res.redirect("/user/profile");
     }
 );
 
 router.get("/logout", function (req, res, next) {
     req.logout(() => {
-        res.send("user logged out");
+        res.redirect("/user");
     });
 });
 
